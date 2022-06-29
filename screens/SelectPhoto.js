@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
+  StatusBar,
   TouchableOpacity,
   useWindowDimensions,
 } from "react-native";
@@ -62,7 +63,13 @@ export default function SelectPhoto({ navigation }) {
     }
   };
   const HeaderRight = () => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("UploadForm", {
+          file: chosenPhoto,
+        })
+      }
+    >
       <HeaderRightText>Next</HeaderRightText>
     </TouchableOpacity>
   );
@@ -73,14 +80,14 @@ export default function SelectPhoto({ navigation }) {
     navigation.setOptions({
       headerRight: HeaderRight,
     });
-  }, []);
+  }, [chosenPhoto]);
   const numColumns = 4;
   const { width } = useWindowDimensions();
   const choosePhoto = (uri) => {
     setChosenPhoto(uri);
   };
   const renderItem = ({ item: photo }) => (
-    <ImageContainer onPress={() => choosePhoto(photo.uri)}>
+    <ImageContainer onPress={() => choosePhoto(photo?.uri)}>
       <Image
         source={{ uri: photo.uri }}
         style={{ width: width / numColumns, height: 100 }}
@@ -96,7 +103,9 @@ export default function SelectPhoto({ navigation }) {
   );
   return (
     <Container>
+      <StatusBar hidden={false} />
       <Top>
+        <StatusBar hidden={true} />
         {chosenPhoto !== "" ? (
           <Image
             source={{ uri: chosenPhoto }}
